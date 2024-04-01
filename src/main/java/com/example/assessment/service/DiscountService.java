@@ -1,33 +1,31 @@
 package com.example.assessment.service;
 
-import com.example.assessment.model.Affiliate;
+import com.example.assessment.dao.UserDao;
 import com.example.assessment.model.Customer;
-import com.example.assessment.model.Employee;
 import com.example.assessment.model.User;
+import com.example.assessment.util.UserTypes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DiscountService {
+    @Autowired
+    private UserDao userDao;
 
     public double calculateAmountBasedDiscount(double amount) {
-        if (amount >= 100 && amount < 200) {
-            return 5;
-        } else if (amount >= 200 && amount < 300) {
-            return 10;
-        } else if (amount >= 300) {
-            return 15;
-        }
-        return 0;
+        int numberOfHundredDollarsUnits = (int)(amount / 100);
+        return (double) numberOfHundredDollarsUnits * 5;
     }
 
+
     public Double getPercentageBasedDiscount(User user, double amount) {
-        if (user instanceof Employee) {
+        if (user.getUserRole() == UserTypes.EMPLOYEE) {
             return 0.3 * amount;
-        } else if (user instanceof Affiliate) {
+        } else if (user.getUserRole() == UserTypes.AFFILIATE) {
             return 0.1 * amount;
-        } else if (user instanceof Customer) {
+        } else if (user.getUserRole() == UserTypes.CUSTOMER && ((Customer)user).isLongTermCustomer()) {
             return 0.05 * amount;
         }
-        return null;
+        return 0.0;
     }
 }

@@ -1,26 +1,28 @@
 package com.example.assessment.model;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import com.example.assessment.util.UserTypes;
 
-import jakarta.persistence.Entity;
-import lombok.Data;
+import java.time.ZonedDateTime;
 
-@Data
-@Entity
+
 public class Customer extends User {
-    private LocalDate registrationDate;
 
-    public Customer() {
-        super();
-        this.registrationDate = LocalDate.now();
+    private String customerMemberShipType;
+
+    public Customer(Long id, String fullName, ZonedDateTime dateOfJoining, String customerMemberShipType) {
+        super(id, fullName, dateOfJoining, UserTypes.CUSTOMER);
+        this.customerMemberShipType = customerMemberShipType;
     }
 
-    public long numberOfYearsAsCustomer() {
-        return ChronoUnit.YEARS.between(this.registrationDate, LocalDate.now());
+    public String getCustomerMemberShipType() {
+        return customerMemberShipType;
+    }
+
+    public void setCustomerMemberShipType(String customerMemberShipType) {
+        this.customerMemberShipType = customerMemberShipType;
     }
 
     public boolean isLongTermCustomer() {
-        return numberOfYearsAsCustomer() > 2;
+        return getRelationShipYears() >= 2;
     }
 }
